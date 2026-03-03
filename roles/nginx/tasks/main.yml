@@ -1,22 +1,22 @@
-- name: Update apt cache
+- name: Install Git
   apt:
-    update_cache: yes
-
-- name: Install Nginx
-  apt:
-    name: nginx
+    name: git
     state: present
 
-- name: Start and Enable Nginx
-  service:
-    name: nginx
-    state: started
-    enabled: yes
+- name: Delete old website folder
+  file:
+    path: /var/www/html
+    state: absent
 
-- name: Deploy Custom Index Page
-  copy:
-    content: |
-      <h1>🚀 DevOps Deployment Successful!</h1>
-      <p>Server: {{ ansible_hostname }}</p>
-      <p>IP: {{ ansible_default_ipv4.address }}</p>
-    dest: /var/www/html/index.html
+- name: Create fresh website folder
+  file:
+    path: /var/www/html
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
+- name: Clone Website from GitHub
+  git:
+    repo: "https://github.com/omwarkri/ansible-simple-app.git"
+    dest: /var/www/html
