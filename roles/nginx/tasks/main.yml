@@ -1,0 +1,22 @@
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
+- name: Install Nginx
+  apt:
+    name: nginx
+    state: present
+
+- name: Start and Enable Nginx
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: Deploy Custom Index Page
+  copy:
+    content: |
+      <h1>🚀 DevOps Deployment Successful!</h1>
+      <p>Server: {{ ansible_hostname }}</p>
+      <p>IP: {{ ansible_default_ipv4.address }}</p>
+    dest: /var/www/html/index.html
